@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <title>Quiz Despliegue de Aplicaciones
+   </title>
+   <style>
+      :root {
+         --bg1: #0b1020;
+         --bg2: #0f1b3d;
+         --card: rgba(255, 255, 255, .08);
+         --card2: rgba(255, 255, 255, .12);
+         --stroke: rgba(255, 255, 255, .14);
+         --text: rgba(255, 255, 255, .92);
+         --muted: rgba(255, 255, 255, .65);
+         --good: #22c55e;
+         --bad: #ef4444;
+         --accent: #60a5fa;
+         --accent2: #a78bfa;
+         --shadow: 0 20px 60px rgba(0, 0, 0, .45);
+         --radius: 22px;
+         --radius2: 16px;
+         --maxw: 980px;
+         --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+
+      * {
+         box-sizing: border-box
+      }
+
+      body {
+         margin: 0;
+         font-family: var(--font);
+         color: var(--text);
+         min-height: 100svh;
+         background:
+            radial-gradient(1000px 600px at 15% 10%, rgba(167, 139, 250, .22), transparent 60%),
+            radial-gradient(900px 500px at 90% 25%, rgba(96, 165, 250, .20), transparent 55%),
+            linear-gradient(180deg, var(--bg1), var(--bg2));
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 24px;
+      }
+
+      .shell {
+         width: min(var(--maxw), 100%);
+         display: grid;
+         gap: 16px;
+      }
+
+      .topbar {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         gap: 16px;
+         padding: 14px 16px;
+         border: 1px solid var(--stroke);
+         background: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .06));
+         border-radius: var(--radius);
+         box-shadow: var(--shadow);
+         backdrop-filter: blur(10px);
+      }
+
+      .brand {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         min-width: 220px;
+      }
+
+      .logo {
+         width: 38px;
+         height: 38px;
+         border-radius: 12px;
+         background: conic-gradient(from 200deg, var(--accent), var(--accent2), var(--accent));
+         box-shadow: 0 10px 30px rgba(96, 165, 250, .25);
+         border: 1px solid rgba(255, 255, 255, .25);
+      }
+
+      .brand h1 {
+         font-size: 14px;
+         letter-spacing: .12em;
+         text-transform: uppercase;
+         margin: 0;
+         color: rgba(255, 255, 255, .85);
+      }
+
+      .brand small {
+         display: block;
+         margin-top: 2px;
+         font-size: 12px;
+         color: var(--muted);
+         letter-spacing: 0;
+         text-transform: none;
+      }
+
+      .meta {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         flex-wrap: wrap;
+         justify-content: flex-end;
+      }
+
+      .pill {
+         border: 1px solid var(--stroke);
+         background: rgba(255, 255, 255, .06);
+         padding: 8px 12px;
+         border-radius: 999px;
+         font-size: 13px;
+         color: rgba(255, 255, 255, .78);
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         white-space: nowrap;
+      }
+
+      .dot {
+         width: 8px;
+         height: 8px;
+         border-radius: 999px;
+         background: var(--accent);
+         box-shadow: 0 0 0 6px rgba(96, 165, 250, .18);
+      }
+
+      .progressWrap {
+         width: min(380px, 100%);
+         border: 1px solid var(--stroke);
+         background: rgba(255, 255, 255, .06);
+         border-radius: 999px;
+         overflow: hidden;
+         height: 12px;
+      }
+
+      .progress {
+         height: 100%;
+         width: 0%;
+         background: linear-gradient(90deg, var(--accent), var(--accent2));
+         border-radius: 999px;
+         transition: width .35s ease;
+      }
+
+      .card {
+         border: 1px solid var(--stroke);
+         background: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .05));
+         border-radius: var(--radius);
+         box-shadow: var(--shadow);
+         backdrop-filter: blur(10px);
+         overflow: hidden;
+      }
+
+      .cardHeader {
+         padding: 18px 20px 14px;
+         border-bottom: 1px solid rgba(255, 255, 255, .10);
+         display: flex;
+         gap: 14px;
+         align-items: flex-start;
+         justify-content: space-between;
+         flex-wrap: wrap;
+      }
+
+      .kicker {
+         font-size: 12px;
+         letter-spacing: .14em;
+         text-transform: uppercase;
+         color: rgba(255, 255, 255, .70);
+      }
+
+      .qTitle {
+         margin: 6px 0 0;
+         font-size: 20px;
+         line-height: 1.25;
+         letter-spacing: -.01em;
+         max-width: 820px;
+      }
+
+      .content {
+         padding: 18px 20px 20px;
+         display: grid;
+         gap: 16px;
+      }
+
+      .options {
+         display: grid;
+         gap: 12px;
+      }
+
+      button.option {
+         width: 100%;
+         text-align: left;
+         border: 1px solid var(--stroke);
+         background: rgba(255, 255, 255, .06);
+         color: var(--text);
+         padding: 14px 14px;
+         border-radius: var(--radius2);
+         cursor: pointer;
+         transition: transform .08s ease, background .18s ease, border-color .18s ease;
+         display: flex;
+         gap: 12px;
+         align-items: flex-start;
+      }
+
+      button.option:hover {
+         background: rgba(255, 255, 255, .10);
+         border-color: rgba(255, 255, 255, .22);
+         transform: translateY(-1px);
+      }
+
+      button.option:active {
+         transform: translateY(0px) scale(.998);
+      }
+
+      button.option:disabled {
+         cursor: not-allowed;
+         opacity: .8;
+      }
+
+      .badge {
+         flex: 0 0 auto;
+         width: 28px;
+         height: 28px;
+         border-radius: 10px;
+         display: grid;
+         place-items: center;
+         font-weight: 700;
+         font-size: 13px;
+         background: rgba(255, 255, 255, .10);
+         border: 1px solid rgba(255, 255, 255, .16);
+         color: rgba(255, 255, 255, .85);
+      }
+
+      .optText {
+         line-height: 1.35;
+         font-size: 15px;
+         color: rgba(255, 255, 255, .88);
+      }
+
+      .footer {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         gap: 12px;
+         flex-wrap: wrap;
+         padding-top: 4px;
+      }
+
+      .btn {
+         border: 1px solid rgba(255, 255, 255, .18);
+         background: rgba(255, 255, 255, .08);
+         color: rgba(255, 255, 255, .88);
+         padding: 10px 14px;
+         border-radius: 14px;
+         cursor: pointer;
+         transition: background .18s ease, transform .08s ease, border-color .18s ease;
+         font-size: 14px;
+         display: inline-flex;
+         align-items: center;
+         gap: 10px;
+         user-select: none;
+      }
+
+      .btn:hover {
+         background: rgba(255, 255, 255, .12);
+         border-color: rgba(255, 255, 255, .26);
+         transform: translateY(-1px);
+      }
+
+      .btn:active {
+         transform: translateY(0px);
+      }
+
+      .btn.primary {
+         background: linear-gradient(90deg, rgba(96, 165, 250, .28), rgba(167, 139, 250, .24));
+         border-color: rgba(255, 255, 255, .22);
+      }
+
+      .btn.primary:hover {
+         background: linear-gradient(90deg, rgba(96, 165, 250, .34), rgba(167, 139, 250, .30));
+      }
+
+      .btn:disabled {
+         opacity: .55;
+         cursor: not-allowed;
+         transform: none;
+      }
+
+      .hint {
+         color: var(--muted);
+         font-size: 13px;
+         line-height: 1.35;
+      }
+
+      /* Feedback states */
+      .correct {
+         border-color: rgba(34, 197, 94, .55) !important;
+         background: rgba(34, 197, 94, .14) !important;
+      }
+
+      .wrong {
+         border-color: rgba(239, 68, 68, .55) !important;
+         background: rgba(239, 68, 68, .12) !important;
+      }
+
+      .explain {
+         border: 1px solid rgba(255, 255, 255, .14);
+         background: rgba(255, 255, 255, .06);
+         border-radius: var(--radius2);
+         padding: 14px 14px;
+         display: none;
+         gap: 8px;
+      }
+
+      .explain.show {
+         display: grid;
+      }
+
+      .explain strong {
+         font-size: 14px;
+         letter-spacing: .02em;
+      }
+
+      .explain p {
+         margin: 0;
+         color: rgba(255, 255, 255, .80);
+         line-height: 1.4;
+         font-size: 14px;
+      }
+
+      .result {
+         display: none;
+         text-align: center;
+         padding: 26px 18px 24px;
+      }
+
+      .result.show {
+         display: block;
+      }
+
+      .score {
+         font-size: 44px;
+         margin: 0;
+         letter-spacing: -.03em;
+      }
+
+      .result p {
+         margin: 10px auto 0;
+         max-width: 720px;
+         color: rgba(255, 255, 255, .78);
+         line-height: 1.5;
+      }
+
+      .tiny {
+         color: rgba(255, 255, 255, .55);
+         font-size: 12px;
+      }
+
+      @media (max-width: 620px) {
+         .brand {
+            min-width: unset;
+         }
+
+         .qTitle {
+            font-size: 18px;
+         }
+
+         .score {
+            font-size: 40px;
+         }
+      }
+   </style>
+</head>
+
+<body>
+   <div class="shell">
+      <div class="topbar">
+         <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+               <h1>Quiz · Despliegue de Aplicaciones</h1>
+               <small id="subtitle">Preguntas tipo test</small>
+            </div>
+         </div>
+
+         <div class="meta">
+            <div class="pill"><span class="dot" aria-hidden="true"></span><span id="counter">1 / 1</span></div>
+            <div class="progressWrap" aria-label="Progreso">
+               <div class="progress" id="progress"></div>
+            </div>
+            <button class="btn" id="btnReset" type="button" title="Reiniciar">↻ Reiniciar</button>
+         </div>
+      </div>
+
+      <div class="card" id="card">
+         <div class="cardHeader">
+            <div>
+               <div class="kicker" id="kicker">Pregunta</div>
+               <h2 class="qTitle" id="question">—</h2>
+            </div>
+            <div class="pill" id="statePill" style="display:none;"></div>
+         </div>
+
+         <div class="content" id="content">
+            <div class="options" id="options"></div>
+
+            <div class="explain" id="explainBox">
+               <strong id="explainTitle">Explicación</strong>
+               <p id="explainText"></p>
+               <div class="tiny" id="explainTiny"></div>
+            </div>
+
+            <div class="footer">
+               <div class="hint" id="hint">Selecciona una opción. Después, avanza para ver la corrección y explicación.
+               </div>
+               <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+                  <button class="btn" id="btnPrev" type="button">← Anterior</button>
+                  <button class="btn primary" id="btnNext" type="button">Siguiente →</button>
+               </div>
+            </div>
+
+            <div class="result" id="result">
+               <p class="score" id="score">0 / 0</p>
+               <p id="resultText"></p>
+               <div style="margin-top:14px;">
+                  <button class="btn primary" id="btnRestart2" type="button">Repetir quiz</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <script>
+      const quiz = [
+         {
+            title: "Actividad final · Infraestructura",
+            q: "¿Qué archivo del sistema se modifica para que el dominio inventario.local apunte a la IP local?",
+            opts: [
+               "A) httpd.conf",
+               "B) my.ini",
+               "C) hosts",
+               "D) php.ini"
+            ],
+            correct: 2,
+            exp: "Para que inventario.local resuelva en tu equipo, se edita el archivo hosts del sistema y se apunta a 127.0.0.1 (o a la IP que toque)."
+         },
+         {
+            title: "Actividad final · Virtual Host",
+            q: "¿Cuál es la finalidad principal de configurar un Virtual Host en Apache?",
+            opts: [
+               "A) Aumentar la velocidad del procesador",
+               "B) Permitir múltiples dominios con configuraciones independientes en un mismo servidor",
+               "C) Sustituir el archivo .htaccess",
+               "D) Crear automáticamente bases de datos"
+            ],
+            correct: 1,
+            exp: "Un Virtual Host te permite servir distintos sitios/dominios con DocumentRoot y directivas propias en el mismo Apache."
+         },
+         {
+            title: "Actividad final · Carga de vhosts",
+            q: "Si no se descomenta la inclusión de httpd-vhosts.conf en httpd.conf, ¿qué ocurrirá?",
+            opts: [
+               "A) Apache no iniciará",
+               "B) El certificado SSL dejará de funcionar",
+               "C) El host virtual no se cargará correctamente",
+               "D) Se bloqueará el acceso a MySQL"
+            ],
+            correct: 2,
+            exp: "Si no incluyes el fichero de vhosts, Apache ignora esas configuraciones y el dominio no apuntará al DocumentRoot esperado."
+         },
+         {
+            title: "Actividad final · Rendimiento",
+            q: "¿Qué directiva se ajusta para limitar el número máximo de peticiones/usuarios simultáneos atendidos por Apache?",
+            opts: [
+               "A) KeepAlive",
+               "B) CacheRoot",
+               "C) MaxRequestWorkers",
+               "D) Timeout"
+            ],
+            correct: 2,
+            exp: "MaxRequestWorkers limita cuántas peticiones simultáneas puede atender Apache (evitas que se coma la RAM si algo va mal)."
+         },
+         {
+            title: "Actividad final · Caché",
+            q: "¿Qué módulos deben habilitarse para activar la caché en disco en Apache?",
+            opts: [
+               "A) mod_ssl y mod_rewrite",
+               "B) mod_php y mod_status",
+               "C) mod_cache y mod_cache_disk",
+               "D) mod_proxy y mod_headers"
+            ],
+            correct: 2,
+            exp: "mod_cache habilita la caché y mod_cache_disk permite almacenarla en disco para recursos estáticos (CSS, etc.)."
+         },
+         {
+            title: "Actividad final · HTTPS",
+            q: "¿Qué herramienta se utiliza para generar un certificado SSL autofirmado para habilitar HTTPS en pruebas?",
+            opts: [
+               "A) phpMyAdmin",
+               "B) OpenSSL",
+               "C) Git",
+               "D) Apache Benchmark"
+            ],
+            correct: 1,
+            exp: "Con OpenSSL generas clave privada + certificado autofirmado. El navegador avisará, pero el tráfico va cifrado."
+         },
+         {
+            title: "Actividad final · .htaccess",
+            q: "Para que el archivo .htaccess funcione dentro del directorio del proyecto, ¿qué directiva debe permitirlo en Apache?",
+            opts: [
+               "A) AllowOverride All",
+               "B) Require all granted",
+               "C) ServerName localhost",
+               "D) Options Indexes"
+            ],
+            correct: 0,
+            exp: "Sin AllowOverride (p. ej. All), Apache ignora el .htaccess aunque exista."
+         },
+         {
+            title: "Actividad final · Autenticación básica",
+            q: "¿Qué herramienta de consola permite generar el archivo de credenciales (usuarios/contraseñas) para autenticación básica?",
+            opts: [
+               "A) openssl",
+               "B) htpasswd",
+               "C) mysql",
+               "D) netstat"
+            ],
+            correct: 1,
+            exp: "htpasswd crea/gestiona el fichero con hashes de contraseñas que luego referencia el .htaccess."
+         },
+         {
+            title: "Actividad final · SQL Injection",
+            q: "¿Qué técnica se recomienda en PHP para prevenir inyecciones SQL al insertar/listar productos?",
+            opts: [
+               "A) Concatenar variables con comillas simples",
+               "B) Usar consultas preparadas con PDO o MySQLi",
+               "C) Codificar el HTML con CSS",
+               "D) Cambiar el puerto de MySQL"
+            ],
+            correct: 1,
+            exp: "Las consultas preparadas separan datos de la sentencia SQL, neutralizando gran parte de los intentos de inyección."
+         },
+         {
+            title: "Actividad final · Monitorización",
+            q: "¿Qué herramienta se emplea para realizar una prueba básica de carga y medir tiempos de respuesta del servidor?",
+            opts: [
+               "A) Wireshark",
+               "B) Jenkins",
+               "C) Apache Benchmark (ab)",
+               "D) Docker"
+            ],
+            correct: 2,
+            exp: "Apache Benchmark (ab) permite lanzar un número de peticiones/concurrencia y medir latencias/throughput."
+         }
+      ];
+
+      // UI refs
+      const elCounter = document.getElementById("counter");
+      const elProgress = document.getElementById("progress");
+      const elKicker = document.getElementById("kicker");
+      const elQuestion = document.getElementById("question");
+      const elOptions = document.getElementById("options");
+      const elHint = document.getElementById("hint");
+      const elExplainBox = document.getElementById("explainBox");
+      const elExplainText = document.getElementById("explainText");
+      const elExplainTiny = document.getElementById("explainTiny");
+      const elStatePill = document.getElementById("statePill");
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnReset = document.getElementById("btnReset");
+      const elResult = document.getElementById("result");
+      const elScore = document.getElementById("score");
+      const elResultText = document.getElementById("resultText");
+      const btnRestart2 = document.getElementById("btnRestart2");
+
+      // State
+      let i = 0;                    // question index
+      let phase = "question";       // "question" or "answer"
+      const picks = Array(quiz.length).fill(null);      // chosen option index
+      const checked = Array(quiz.length).fill(false);   // whether answer-phase has been shown
+
+      function pct(n) { return Math.round(n * 100) + "%"; }
+
+      function render() {
+         // Result screen
+         if (i >= quiz.length) {
+            showResult();
+            return;
+         }
+
+         const q = quiz[i];
+         elCounter.textContent = `${i + 1} / ${quiz.length}`;
+         elProgress.style.width = pct((i) / (quiz.length - 1 || 1)); // keeps it moving even if 1 question
+         elKicker.textContent = phase === "question" ? `Pregunta · ${q.title}` : `Corrección · ${q.title}`;
+         elQuestion.textContent = q.q;
+
+         // Reset explain + pill
+         elExplainBox.classList.remove("show");
+         elStatePill.style.display = "none";
+         elStatePill.className = "pill";
+         elStatePill.textContent = "";
+
+         elOptions.innerHTML = "";
+
+         q.opts.forEach((txt, idxOpt) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "option";
+
+            const badge = document.createElement("div");
+            badge.className = "badge";
+            badge.textContent = String.fromCharCode(65 + idxOpt);
+
+            const span = document.createElement("div");
+            span.className = "optText";
+            span.textContent = txt;
+
+            btn.appendChild(badge);
+            btn.appendChild(span);
+
+            const picked = picks[i] === idxOpt;
+            const isCorrect = idxOpt === q.correct;
+
+            if (phase === "question") {
+               // allow picking
+               btn.disabled = false;
+               btn.addEventListener("click", () => {
+                  picks[i] = idxOpt;
+                  // quick highlight selected (neutral)
+                  document.querySelectorAll("button.option").forEach(b => b.classList.remove("correct", "wrong"));
+                  btn.classList.add("correct"); // use green as "selected" here (looks nicer). real correction in answer-phase.
+                  elHint.textContent = "Seleccionado. Pulsa “Siguiente” para ver la corrección y explicación.";
+               });
+
+               // If already picked earlier, mark it subtly
+               if (picked) {
+                  btn.classList.add("correct");
+                  elHint.textContent = "Seleccionado. Pulsa “Siguiente” para ver la corrección y explicación.";
+               } else {
+                  elHint.textContent = "Selecciona una opción. Después, avanza para ver la corrección y explicación.";
+               }
+
+            } else {
+               // answer phase: show correct highlighted, wrong pick marked
+               btn.disabled = true;
+
+               if (isCorrect) btn.classList.add("correct");
+               if (picked && !isCorrect) btn.classList.add("wrong");
+
+               // explanation + pill
+               elExplainBox.classList.add("show");
+               elExplainText.textContent = q.exp;
+               const pickedTxt = picks[i] == null ? "—" : String.fromCharCode(65 + picks[i]);
+               const correctTxt = String.fromCharCode(65 + q.correct);
+               elExplainTiny.textContent = `Tu respuesta: ${pickedTxt} · Correcta: ${correctTxt}`;
+
+               elStatePill.style.display = "inline-flex";
+               if (picks[i] === q.correct) {
+                  elStatePill.textContent = "✅ Correcta";
+                  elStatePill.style.borderColor = "rgba(34,197,94,.45)";
+                  elStatePill.style.background = "rgba(34,197,94,.12)";
+               } else {
+                  elStatePill.textContent = "❌ Incorrecta";
+                  elStatePill.style.borderColor = "rgba(239,68,68,.45)";
+                  elStatePill.style.background = "rgba(239,68,68,.10)";
+               }
+
+               elHint.textContent = "Ya está corregida. Pulsa “Siguiente” para continuar.";
+            }
+
+            elOptions.appendChild(btn);
+         });
+
+         // Buttons
+         btnPrev.disabled = (i === 0 && phase === "question");
+         btnNext.textContent = phase === "question" ? "Siguiente →" : (i === quiz.length - 1 ? "Finalizar →" : "Siguiente →");
+         btnNext.disabled = false;
+         btnPrev.disabled = (i === 0 && phase === "question");
+      }
+
+      function next() {
+         if (i >= quiz.length) return;
+
+         if (phase === "question") {
+            // Require a selection
+            if (picks[i] == null) {
+               elHint.textContent = "Te falta elegir una opción. No te escaquees.";
+               return;
+            }
+            phase = "answer";
+            checked[i] = true;
+            render();
+            return;
+         }
+
+         // phase === "answer"
+         phase = "question";
+         i += 1;
+         render();
+      }
+
+      function prev() {
+         if (i === 0 && phase === "question") return;
+
+         if (phase === "answer") {
+            // go back to question-phase of same question
+            phase = "question";
+            render();
+            return;
+         }
+
+         // phase === "question": go to previous question in answer-phase if it was checked, else question-phase
+         i -= 1;
+         phase = checked[i] ? "answer" : "question";
+         render();
+      }
+
+      function resetAll() {
+         i = 0;
+         phase = "question";
+         for (let k = 0; k < quiz.length; k++) {
+            picks[k] = null;
+            checked[k] = false;
+         }
+         elResult.classList.remove("show");
+         document.getElementById("content").style.display = "grid";
+         btnNext.disabled = false;
+         render();
+      }
+
+      function showResult() {
+         const total = quiz.length;
+         let ok = 0;
+         for (let k = 0; k < total; k++) {
+            if (picks[k] === quiz[k].correct) ok++;
+         }
+         elScore.textContent = `${ok} / ${total}`;
+         const ratio = ok / total;
+
+         let msg;
+         if (ratio === 1) msg = "Perfecto. Puedes salir a la calle sin miedo a un 500.";
+         else if (ratio >= .75) msg = "Muy bien. Alguna cosa floja, pero nada que no arregle un repaso corto.";
+         else if (ratio >= .5) msg = "Aprobado raspado. Te salva la campana… por ahora.";
+         else msg = "Hoy no. Repasa y vuelve a intentarlo; el servidor no perdona.";
+
+         elResultText.textContent = msg;
+
+         // Switch view
+         document.getElementById("content").style.display = "block";
+         elOptions.innerHTML = "";
+         elExplainBox.classList.remove("show");
+         elHint.textContent = "Resultado final";
+         elStatePill.style.display = "none";
+         elProgress.style.width = "100%";
+         elKicker.textContent = "Resultado";
+         elQuestion.textContent = "Fin del quiz";
+         elResult.classList.add("show");
+         btnPrev.disabled = true;
+         btnNext.disabled = true;
+      }
+
+      // Events
+      btnNext.addEventListener("click", next);
+      btnPrev.addEventListener("click", prev);
+      btnReset.addEventListener("click", resetAll);
+      btnRestart2.addEventListener("click", resetAll);
+
+      // init
+      document.getElementById("subtitle").textContent = `${quiz.length} preguntas · corrección con explicación`;
+      elCounter.textContent = `1 / ${quiz.length}`;
+      render();
+   </script>
+</body>
+
+</html>
